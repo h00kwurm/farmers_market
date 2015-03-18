@@ -82,22 +82,24 @@ def average_number_of_items(items, markets):
 def pair_array_add(array_one, array_two):
   return [array_one[0] + array_two[0], array_one[1] + array_two[1]]
 
+def pair_map_to_probability(pair):
+  return (pair[0] / float(pair[1]))
 
 # this could be more efficient using bayes theorem to not have to do both P(A|B) and P(B|A)
-# especially since the percentages provided earlier are P(A) and P(B)
-def generate_pairwise_probabilities(items, markets):
+def generate_pairwise_conditional_probabilities(items, markets):
   probability_map = {}
   for (item_a, item_b) in itertools.permutations(items, 2):
-    probability_map[(item_a, item_b)] = [0, 0]
-    for market in markets:
-      if market.get(item_b) == 'N':
-        continue
-      if market.get(item_b) == 'Y' and market.get(item_a) == 'Y':
-        probability_map[(item_a, item_b)] = pair_array_add(probability_map[(item_a, item_b)], [1, 1])
-      else:
-        probability_map[(item_a, item_b)] = pair_array_add(probability_map[(item_a, item_b)], [0, 1])
+    if item_a != item_b:
+      probability_map[(item_a, item_b)] = [0, 0]
+      for market in markets:
+        if market.get(item_b) == 'N':
+          continue
+        if market.get(item_b) == 'Y' and market.get(item_a) == 'Y':
+          probability_map[(item_a, item_b)] = pair_array_add(probability_map[(item_a, item_b)], [1, 1])
+        else:
+          probability_map[(item_a, item_b)] = pair_array_add(probability_map[(item_a, item_b)], [0, 1])
+      probability_map[(item_a, item_b)] = pair_map_to_probability(probability_map[(item_a, item_b)])
   return probability_map
-
 
 def main():
 
@@ -117,15 +119,7 @@ def main():
 
   average_number_of_items(items, markets)
   percentages_of_items(items, markets)
-  probabilities = generate_pairwise_probabilities(items, markets)
-
-  counter = 0
-  for key in probabilities.keys():
-    if counter = 10:
-      break
-    else:
-      counter += 1
-      print(probabilities[key])
+  # probabilities = generate_pairwise_conditional_probabilities(items, markets)
 
   return EXIT_SUCCESS
 
