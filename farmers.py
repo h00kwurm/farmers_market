@@ -55,9 +55,9 @@ def do_they_all_have_xy(markets):
     if market.get('x') is None or market.get('y') is None:
       xyless.append(market)
   if len(xyless) == 0:
-    return (True, None)
+    return None
   else:
-    return (False, xyless)
+    return xyless
 
 def percentages_of_items(items, markets):
   count = [0]*len(items)
@@ -111,8 +111,8 @@ def main():
   if len(markets) == 0:
     return fail("found no markets in datafile")
 
-  all_xy, xyless = do_they_all_have_xy(markets)
-  if not all_xy:
+  xyless = do_they_all_have_xy(markets)
+  if xyless is not None:
     print(xyless)
 
   items = ['bakedgoods', 'cheese', 'crafts', 'flowers', 'eggs', 'seafood', 'herbs', 'vegetables', 'honey', 'jams', 'maple', 'meat', 'nursery', 'nuts', 'plants', 'poultry', 'prepared', 'soap', 'trees', 'wine']
